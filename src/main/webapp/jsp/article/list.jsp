@@ -55,10 +55,30 @@ int totalPage =(int) request.getAttribute("totalPage");
 	</style>
 	<div class="page">
 	<%
-	for (int i = 1; i <= totalPage; i++){
+	if(totalPage <= 10){ 
+		for (int i = 1; i <= totalPage; i++){
 	%>
 	<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
 	<%
+		}
+	}
+	%>
+	<%
+	else if(cPage <= 5){
+		for (int i = 1; i <= 10; i++){
+	%>
+			<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
+	<%
+		}
+	}
+	%>
+	<%
+	else if(cPage > 5){
+		for (int i = cPage-4; i <= cPage+5; i++){
+	%>
+			<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
+	<%
+		}
 	}
 	%>
 	</div>
