@@ -17,7 +17,7 @@
 		<div>
 			내용 :
 			<textarea autocomplete="off" placeholder="내용을 입력해주세요" name="body"
-				type="text" /></textarea>
+				type="text" rows="4" cols="50"/></textarea>
 		</div>
 
 		<button type="submit">글쓰기</button>
