@@ -1,20 +1,26 @@
 package com.KMS.java.AM.servlet;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Map;
+
+import com.KMS.java.AM.util.DBUtil;
+import com.KMS.java.AM.util.SecSql;
+
 import jakarta.servlet.ServletException;
-
-
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-@WebServlet("/home/main")
 
-public class MainPageServlet extends HttpServlet {
+@WebServlet("/article/write")
+public class ArticleWriteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
+		request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
 	}
 
 	@Override
