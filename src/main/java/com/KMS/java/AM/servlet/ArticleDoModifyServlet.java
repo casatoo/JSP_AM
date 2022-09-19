@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 
+import com.KMS.java.AM.config.Config;
 import com.KMS.java.AM.util.DBUtil;
 import com.KMS.java.AM.util.SecSql;
 
@@ -24,13 +24,10 @@ public class ArticleDoModifyServlet extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		// DB 연결
-		String url = "jdbc:mysql://1.234.44.77:3306/JSPTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-		String user = "user1";
-		String password = "mkop9074!@";
 
 		Connection conn = null;
 
-		String driverName = "com.mysql.jdbc.Driver";
+		String driverName = Config.getDBDriverClassName();
 
 		try {
 			Class.forName(driverName);
@@ -42,20 +39,21 @@ public class ArticleDoModifyServlet extends HttpServlet {
 		}
 
 		try {
-			conn = DriverManager.getConnection(url, user, password);
+			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
 
+			int id = Integer.parseInt(request.getParameter("id"));
 			String title = request.getParameter("title");
 			String body = request.getParameter("body");
 
-			SecSql sql = SecSql.from("INSERT INTO article");
-			sql.append("SET regDate = NOW()");
-			sql.append(", title = ?", title);
-			sql.append(", `body` = ?;", body);
+			SecSql sql = SecSql.from("UPDATE article");
+			sql.append("SET title = ?", title);
+			sql.append(", `body` = ?", body);
+			sql.append("WHERE id = ?;", id);
 
-			int id = DBUtil.insert(conn, sql);
+			DBUtil.update(conn, sql);
 
-			response.getWriter()
-					.append(String.format("<script>alert('%d번 글이 수정 되었습니다.'); location.replace('list');</script>", id));
+			response.getWriter().append(String
+					.format("<script>alert('%d번 글이 수정 되었습니다.'); location.replace('detail?id=%d');</script>", id, id));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -68,8 +66,9 @@ public class ArticleDoModifyServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

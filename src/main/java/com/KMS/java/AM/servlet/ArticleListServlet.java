@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.KMS.java.AM.config.Config;
 import com.KMS.java.AM.util.DBUtil;
 import com.KMS.java.AM.util.SecSql;
 
@@ -25,13 +26,10 @@ public class ArticleListServlet extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 
 		// DB 연결
-		String url = "jdbc:mysql://1.234.44.77:3306/JSPTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-		String user = "user1";
-		String password = "mkop9074!@";
 
 		Connection conn = null;
 
-		String driverName = "com.mysql.jdbc.Driver";
+		String driverName = Config.getDBDriverClassName();
 
 		try {
 			Class.forName(driverName);
@@ -43,29 +41,28 @@ public class ArticleListServlet extends HttpServlet {
 		}
 
 		try {
-			conn = DriverManager.getConnection(url, user, password);
-			
+			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
+
 			int page = 1;
-			
-			if(request.getParameter("page") != null && request.getParameter("page").length() != 0) {
+
+			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {
 				page = Integer.parseInt(request.getParameter("page"));
 			}
-			
+
 			int itemsInAPage = 10;
-			
-			int limitFrom = (page -1 )* itemsInAPage;
+
+			int limitFrom = (page - 1) * itemsInAPage;
 
 			SecSql sql = SecSql.from("SELECT COUNT(*) AS cnt");
 			sql.append("FROM article");
-			
-			int totalCount = DBUtil.selectRowIntValue(conn, sql);
-			int totalPage = (int) Math.ceil((double)totalCount / itemsInAPage);
 
-			
+			int totalCount = DBUtil.selectRowIntValue(conn, sql);
+			int totalPage = (int) Math.ceil((double) totalCount / itemsInAPage);
+
 			sql = SecSql.from("SELECT *");
 			sql.append("FROM article");
 			sql.append("ORDER BY id DESC");
-			sql.append("LIMIT ?, ?",limitFrom,itemsInAPage);
+			sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
 
 			List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
 
@@ -86,6 +83,7 @@ public class ArticleListServlet extends HttpServlet {
 			}
 		}
 	}
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

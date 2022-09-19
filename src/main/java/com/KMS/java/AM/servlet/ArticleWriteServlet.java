@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 
+import com.KMS.java.AM.config.Config;
 import com.KMS.java.AM.util.DBUtil;
 import com.KMS.java.AM.util.SecSql;
 

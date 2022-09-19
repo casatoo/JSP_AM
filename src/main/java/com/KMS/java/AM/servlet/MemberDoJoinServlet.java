@@ -1,23 +1,20 @@
 package com.KMS.java.AM.servlet;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Map;
-
-import com.KMS.java.AM.config.Config;
-import com.KMS.java.AM.util.DBUtil;
-import com.KMS.java.AM.util.SecSql;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-@WebServlet("/article/doDelete")
-public class ArticleDoDeleteServlet extends HttpServlet {
+import com.KMS.java.AM.config.Config;
+import com.KMS.java.AM.util.DBUtil;
+import com.KMS.java.AM.util.SecSql;
+
+public class MemberDoJoinServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -41,17 +38,14 @@ public class ArticleDoDeleteServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
+			
+			String memberId = request.getParameter("memberId");
+			String memberPw = request.getParameter("memberPw");
 
-			int id = Integer.parseInt(request.getParameter("id"));
+			SecSql sql = SecSql.from("INSERT INTO article");
+			sql.append("SET regDate = NOW()");
 
-			SecSql sql = SecSql.from("DELETE");
-			sql.append("FROM article");
-			sql.append("WHERE id = ?", id);
-
-			DBUtil.delete(conn, sql);
-
-			response.getWriter()
-					.append(String.format("<script>alert('%d번 글이 삭제 되었습니다.'); location.replace('list');</script>", id));
+			int id = DBUtil.insert(conn, sql);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,10 +59,10 @@ public class ArticleDoDeleteServlet extends HttpServlet {
 			}
 		}
 	}
-
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

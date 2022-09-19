@@ -27,4 +27,47 @@ SET regDate = NOW(),
 title = '제목3',
 `body` = '내용3';
 
+INSERT INTO article(regDate,title,`body`)VALUE
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND()));
+
+
 SELECT * FROM article;
+
+SELECT COUNT(*) FROM article;
+
+INSERT INTO article 
+SET regDate = NOW(),
+title = '제목1',
+`body` = '내용1';
+
+DROP TABLE IF EXISTS `member`;
+
+CREATE TABLE `member`(
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
+    loginId VARCHAR(100) NOT NULL UNIQUE,
+    loginPw VARCHAR(100) NOT NULL
+);
+
+DESC `member`;
+
+SELECT * FROM `member`;
+
+INSERT INTO article(regDate,,`body`)VALUE
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
+(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND()));
+
+INSERT INTO article 
+SET regDate = NOW(),
+title = '제목1',
+`body` = '내용1';

@@ -53,35 +53,37 @@ int totalPage =(int) request.getAttribute("totalPage");
 	color:red;
 	}	
 	</style>
-	<div class="page">
-	<%
-	if(totalPage <= 10){ 
-		for (int i = 1; i <= totalPage; i++){
-	%>
-	<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
-	<%
+		<div class="page">
+		<%
+		if (cPage > 1) {
+		%>
+		<a href="list?page=1">◀◀</a>
+		<%
 		}
-	}
-	%>
-	<%
-	else if(cPage <= 5){
-		for (int i = 1; i <= 10; i++){
-	%>
-			<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
-	<%
+		%>
+		<%
+		int pageSize = 5;
+		int from = cPage - pageSize;
+		if (from < 1) {
+			from = 1;
 		}
-	}
-	%>
-	<%
-	else if(cPage > 5){
-		for (int i = cPage-4; i <= cPage+5; i++){
-	%>
-			<a class="<%=cPage == i ? "red" : "" %>" href="list?page=<%=i%>"><%=i%></a>
-	<%
+		int end = cPage + pageSize;
+		if (end > totalPage) {
+			end = totalPage;
 		}
-	}
-	%>
-	</div>
+		for (int i = from; i <= end; i++) {
+		%>
+		<a class="<%=cPage == i ? "red" : ""%>" href="list?page=<%=i%>"><%=i%></a>
+		<%
+		}
+		%>
+		<%
+		if (cPage < totalPage) {
+		%>
+		<a href="list?page=<%=totalPage%>">▶▶</a>
+		<%
+		}
+		%>
 	
 </body>
 </html>
