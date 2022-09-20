@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/doWrite")
 public class ArticleDoWriteServlet extends HttpServlet {
@@ -28,6 +29,10 @@ public class ArticleDoWriteServlet extends HttpServlet {
 		Connection conn = null;
 
 		String driverName = Config.getDBDriverClassName();
+		
+		HttpSession session = request.getSession();
+			
+		int writerId = (int) session.getAttribute("loginedMemberId");
 
 		try {
 			Class.forName(driverName);
@@ -47,7 +52,9 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			SecSql sql = SecSql.from("INSERT INTO article");
 			sql.append("SET regDate = NOW()");
 			sql.append(", title = ?", title);
-			sql.append(", `body` = ?;", body);
+			sql.append(", `body` = ?", body);
+			sql.append(", writerId = ?;", writerId);
+			
 
 			int id = DBUtil.insert(conn, sql);
 
