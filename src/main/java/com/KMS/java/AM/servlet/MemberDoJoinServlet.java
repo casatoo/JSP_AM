@@ -14,6 +14,7 @@ import com.KMS.java.AM.config.Config;
 import com.KMS.java.AM.util.DBUtil;
 import com.KMS.java.AM.util.SecSql;
 
+@WebServlet("/member/dojoin")
 public class MemberDoJoinServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,14 +39,21 @@ public class MemberDoJoinServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
-			
-			String memberId = request.getParameter("memberId");
-			String memberPw = request.getParameter("memberPw");
 
-			SecSql sql = SecSql.from("INSERT INTO article");
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
+			String name = request.getParameter("name");
+
+			SecSql sql = SecSql.from("INSERT INTO `member`");
 			sql.append("SET regDate = NOW()");
+			sql.append(", loginId = ?", loginId);
+			sql.append(", loginPw = ?", loginPw);
+			sql.append(", `name` = ?;", name);
 
 			int id = DBUtil.insert(conn, sql);
+
+			response.getWriter()
+					.append(String.format("<script>alert('%d번 회원이 가입 되었습니다.'); location.replace('../home/main');</script>", id));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -58,11 +66,12 @@ public class MemberDoJoinServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+
 	}
+
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

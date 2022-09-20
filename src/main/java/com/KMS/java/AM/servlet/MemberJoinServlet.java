@@ -14,8 +14,9 @@ public class MemberJoinServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.getRequestDispatcher("/jsp/member/join.jsp").forward(request, response);
 	}
+
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
