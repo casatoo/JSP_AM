@@ -14,7 +14,7 @@ import com.KMS.java.AM.config.Config;
 import com.KMS.java.AM.util.DBUtil;
 import com.KMS.java.AM.util.SecSql;
 
-@WebServlet("/member/dojoin")
+@WebServlet("/member/doJoin")
 public class MemberDoJoinServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +44,15 @@ public class MemberDoJoinServlet extends HttpServlet {
 			String loginPw = request.getParameter("loginPw");
 			String name = request.getParameter("name");
 
-			SecSql sql = SecSql.from("INSERT INTO `member`");
+			SecSql sql = SecSql.from("SELECT COUNT(*)");
+			sql.append("FROM `member`");
+			sql.append("WHERE loginId = ?;", loginId);
+			
+			boolean checkId = DBUtil.selectRowBooleanValue(conn, sql);
+			
+			if(checkId == false) {
+			
+			sql = SecSql.from("INSERT INTO `member`");
 			sql.append("SET regDate = NOW()");
 			sql.append(", loginId = ?", loginId);
 			sql.append(", loginPw = ?", loginPw);
@@ -54,7 +62,10 @@ public class MemberDoJoinServlet extends HttpServlet {
 
 			response.getWriter()
 					.append(String.format("<script>alert('%d번 회원이 가입 되었습니다.'); location.replace('../home/main');</script>", id));
-
+			}else {
+				response.getWriter()
+				.append(String.format("<script>alert('이미 사용중인 아이디'); location.replace('join');</script>"));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

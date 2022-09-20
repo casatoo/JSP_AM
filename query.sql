@@ -50,22 +50,21 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`(
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME NOT NULL,
-    `name` VARCHAR(100) NOT NULL,
     loginId VARCHAR(100) NOT NULL UNIQUE,
-    loginPw VARCHAR(100) NOT NULL
+    loginPw VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100) NOT NULL
 );
 
 DESC `member`;
 
 SELECT * FROM `member`;
 
-INSERT INTO article(regDate,,`body`)VALUE
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND())),
-(NOW(),CONCAT('제목',RAND()),CONCAT('내용',RAND()));
+INSERT INTO `member`
+SET regDate = NOW(),
+loginId = 'id1',
+loginPw = 'pw1',
+ `name` = '홍길동';
+ INSERT INTO `member` SET regDate = NOW() , loginId = 'id2' , loginPw = 'pw2' , `name` = '홍길동';
 
 INSERT INTO article 
 SET regDate = NOW(),
