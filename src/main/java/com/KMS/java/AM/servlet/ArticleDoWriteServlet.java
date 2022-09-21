@@ -31,8 +31,13 @@ public class ArticleDoWriteServlet extends HttpServlet {
 		String driverName = Config.getDBDriverClassName();
 		
 		HttpSession session = request.getSession();
+		
+		if(session.getAttribute("loginedMemberId") == null) {
+			response.getWriter().append(String.format("<script>alert('로그인 후 이용해주세요'); location.replace('../member/login');</script>"));
+			return;
+		}
 			
-		int writerId = (int) session.getAttribute("loginedMemberId");
+		int memberId = (int) session.getAttribute("loginedMemberId");
 
 		try {
 			Class.forName(driverName);
@@ -50,10 +55,10 @@ public class ArticleDoWriteServlet extends HttpServlet {
 			String body = request.getParameter("body");
 
 			SecSql sql = SecSql.from("INSERT INTO article");
-			sql.append("SET regDate = NOW()");
+			sql.append("SET memberId = ?", memberId);
+			sql.append(", regDate = NOW()");
 			sql.append(", title = ?", title);
-			sql.append(", `body` = ?", body);
-			sql.append(", writerId = ?;", writerId);
+			sql.append(", `body` = ?;", body);
 			
 
 			int id = DBUtil.insert(conn, sql);

@@ -48,22 +48,22 @@ public class MemberDoLoginServlet extends HttpServlet {
 			
 			SecSql sql = SecSql.from("SELECT * FROM `member`");
 			sql.append("WHERE loginId = ?", loginId);
-			sql.append("AND loginPw = ?", loginPw);
+			sql.append("AND loginPw = ?;", loginPw);
 
 			Map<String, Object> memberRow= DBUtil.selectRow(conn, sql);
+			
 			if(memberRow.isEmpty()) {
 				response.getWriter()
 					.append(String.format("<script>alert('아이디 또는 비밀번호가 일치하지 않습니다.'); location.replace('login');</script>"));
-			}else {
-				
-				HttpSession session = request.getSession();
-				
-				session.setAttribute("loginedMemberLoginId", memberRow.get("loginId"));
-				session.setAttribute("loginedMemberId", memberRow.get("Id"));
-				
-				response.getWriter()
-				.append(String.format("<script>alert('%s 회원님 환영합니다.'); location.replace('../home/main');</script>",memberRow.get("name")));
+				return;
 			}
+			HttpSession session = request.getSession();
+			session.setAttribute("loginedMemberLoginId", memberRow.get("loginId"));
+			session.setAttribute("loginedMemberId", memberRow.get("id"));
+				
+			response.getWriter()
+			.append(String.format("<script>alert('%s 회원님 환영합니다.'); location.replace('../home/main');</script>",memberRow.get("name")));
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
