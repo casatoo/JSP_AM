@@ -6,7 +6,7 @@
 <%
 List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getAttribute("articleRows");
 int cPage = (int)request.getAttribute("page");
-int totalPage =(int) request.getAttribute("totalPage");
+int totalPage = (int) request.getAttribute("totalPage");
 %>
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,7 @@ int totalPage =(int) request.getAttribute("totalPage");
 </head>
 <body>
 	<h1>게시물 리스트</h1>
-	
+	<%@ include file="../part/topBar.jspf"%>
 	<div>
 		<a href="write">글쓰기</a>
 	</div>
@@ -30,6 +30,7 @@ int totalPage =(int) request.getAttribute("totalPage");
 			<th>번호</th>
 			<th>날짜</th>
 			<th>제목</th>
+			<th>작성자</th>
 			<th>삭제</th>
 			<th>수정</th>
 		</tr>
@@ -41,8 +42,21 @@ int totalPage =(int) request.getAttribute("totalPage");
 			<td><%=articleRow.get("id") %></td>
 			<td><%=articleRow.get("regDate") %></td>
 			<td><a href="detail?id=<%=articleRow.get("id")%>"><%=articleRow.get("title") %></a></td>
-			<td><a href="doDelete?id=<%=articleRow.get("id")%>">삭제하기</a></td>		
-			<td><a href="modify?id=<%=articleRow.get("id")%>">수정하기</a></td>
+			<td><%=articleRow.get("writer") %></td>
+			<%
+			if(loginedMemberId == (int)articleRow.get("memberId")){
+			%>
+			<td><a href="doDelete?id=<%=articleRow.get("id")%>">삭제</a></td>		
+			<td><a href="modify?id=<%=articleRow.get("id")%>">수정</a></td>
+			<% 
+			}
+			else{
+			%>
+			<td><a href="#"></a></td>		
+			<td><a href="#"></a></td>
+			<% 
+			}
+			%>
 		</tr>
 		<%
 		}

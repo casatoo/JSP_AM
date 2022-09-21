@@ -9,6 +9,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Map;
+
+import com.KMS.java.AM.config.Config;
+import com.KMS.java.AM.exception.SQLErrorException;
+import com.KMS.java.AM.util.DBUtil;
+import com.KMS.java.AM.util.SecSql;
 
 @WebServlet("/home/main")
 
@@ -17,22 +26,59 @@ public class MainPageServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		HttpSession Session = request.getSession();
+		response.setContentType("text/html; charset=UTF-8");
 
-		boolean isLogined = false;
-		int loginedMemberId = -1;
+		String driverName = Config.getDBDriverClassName();
 
-		if (Session.getAttribute("loginedMemberLoginId") != null) {
-			loginedMemberId = (int) Session.getAttribute("loginedMemberId");
-			isLogined = true;
+		try {
+			Class.forName(driverName);
+
+		} catch (ClassNotFoundException e) {
+			System.out.println("예외 : 클래스가 없습니다.");
+			System.out.println("프로그램을 종료합니다.");
+			return;
 		}
 
-		request.setAttribute("isLogined", isLogined);
-		request.setAttribute("loginedMemberId", loginedMemberId);
-		
-		request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
-	}
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
 
+			HttpSession session = request.getSession();
+
+			boolean isLogined = false;
+			int loginedMemberId = -1;
+			Map<String, Object> loginedMemebrRow = null;
+
+			if (session.getAttribute("loginedMemberLoginId") != null) {
+				loginedMemberId = (int) session.getAttribute("loginedMemberId");
+				isLogined = true;
+
+				SecSql sql = SecSql.from("SELECT * FROM `member`");
+				sql.append("WHERE id = ?;", loginedMemberId);
+				loginedMemebrRow = DBUtil.selectRow(conn, sql);
+
+			}
+
+			request.setAttribute("isLogined", isLogined);
+			request.setAttribute("loginedMemberId", loginedMemberId);
+			request.setAttribute("loginedMemebrRow", loginedMemebrRow);
+
+			request.getRequestDispatcher("/jsp/home/main.jsp").forward(request, response);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (SQLErrorException e) {
+			e.getOrigin().printStackTrace();
+		} finally {
+			try {
+				if (conn != null && !conn.isClosed()) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

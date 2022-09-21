@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/list")
 public class ArticleListServlet extends HttpServlet {
@@ -43,6 +44,26 @@ public class ArticleListServlet extends HttpServlet {
 		try {
 			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
 
+			HttpSession session = request.getSession();
+
+			boolean isLogined = false;
+			int loginedMemberId = -1;
+			Map<String, Object> loginedMemebrRow = null;
+
+			if (session.getAttribute("loginedMemberLoginId") != null) {
+				loginedMemberId = (int) session.getAttribute("loginedMemberId");
+				isLogined = true;
+
+				SecSql sql = SecSql.from("SELECT * FROM `member`");
+				sql.append("WHERE id = ?;", loginedMemberId);
+				loginedMemebrRow = DBUtil.selectRow(conn, sql);
+
+			}
+
+			request.setAttribute("isLogined", isLogined);
+			request.setAttribute("loginedMemberId", loginedMemberId);
+			request.setAttribute("loginedMemebrRow", loginedMemebrRow);
+			
 			int page = 1;
 
 			if (request.getParameter("page") != null && request.getParameter("page").length() != 0) {
@@ -59,8 +80,10 @@ public class ArticleListServlet extends HttpServlet {
 			int totalCount = DBUtil.selectRowIntValue(conn, sql);
 			int totalPage = (int) Math.ceil((double) totalCount / itemsInAPage);
 
-			sql = SecSql.from("SELECT *");
-			sql.append("FROM article");
+			sql = SecSql.from("SELECT A.*, M.name writer");
+			sql.append("FROM article A");
+			sql.append("INNER JOIN `member` M");
+			sql.append("ON A.memberId = M.id");
 			sql.append("ORDER BY id DESC");
 			sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
 
@@ -70,6 +93,8 @@ public class ArticleListServlet extends HttpServlet {
 			request.setAttribute("totalPage", totalPage);
 			request.setAttribute("articleRows", articleRows);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
+			
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();

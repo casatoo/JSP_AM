@@ -70,3 +70,11 @@ INSERT INTO article
 SET regDate = NOW(),
 title = '제목1',
 `body` = '내용1';
+
+SELECT * FROM article WHERE id = 1;
+
+SELECT A.*, M.name writer FROM article A INNER JOIN `member` M ON A.memberId = M.id ORDER BY id DESC;
+SELECT A.*, M.name writer FROM article A INNER JOIN `member` M ON A.memberId = M.id WHERE A.memberId = 1;
+SELECT A.*, M.name writer FROM article A INNER JOIN `member` M ON A.memberId = M.id WHERE A.id = 5;
+
+UPDATE article SET title = 'ㅁㄴㅇㅁㄴㅇㅁㄴㅇ', `body` = 'ㅁㄴㅇㅁㄴㅇㅁㄴㅇ' WHERE id = 8;

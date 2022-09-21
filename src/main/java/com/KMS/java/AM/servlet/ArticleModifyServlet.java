@@ -41,7 +41,7 @@ public class ArticleModifyServlet extends HttpServlet {
 
 		try {
 			conn = DriverManager.getConnection(Config.getDBUrl(), Config.getDBUser(), Config.getDBPassword());
-
+			
 			int id = Integer.parseInt(request.getParameter("id"));
 
 			SecSql sql = SecSql.from("SELECT *");
