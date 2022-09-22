@@ -1,0 +1,12 @@
+.top-bar{
+    background-color: black;
+    height: 100px;
+}
+.list-area > .list{
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+}
+.list-area > .list > *{
+    border: 1px solid black;
+}
