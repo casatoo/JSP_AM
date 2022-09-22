@@ -12,16 +12,60 @@ int totalPage = (int) request.getAttribute("totalPage");
 <html>
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+@import url('https://fonts.googleapis.com/earlyaccess/notosanskr.css?family=Noto+Sans+KR&display=swap');
+
+body , ul , li{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+a{
+    text-decoration: none;
+    color:inherit;
+}
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+ }
+.top-bar{
+    background-color: black;
+    color:white;
+    display: flex;
+    height:100px;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+}
+.top-bar>div{
+    position: absolute;
+    left: 30%;
+}
+.top-bar>ul{
+    display: flex;
+    height: 100px;
+}
+.top-bar>ul>li{
+    display: flex;
+    align-items: center;
+}
+.top-bar>ul>li>a{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    padding: 0 30px;
+}
+.top-bar>ul>li:hover>a{
+    background-color: white;
+    color: black;
+}
+</style>
 <title>게시물 리스트</title>
 </head>
 <body>
-	<h1>게시물 리스트</h1>
 	<%@ include file="../part/topBar.jspf"%>
-	<div>
-		<a href="write">글쓰기</a>
-	</div>
-
-	<table border="2" bordercolor="green">
+	<table border="2" bordercolor="black">
 		<colgroup>
 			<col width="50"/>
 			<col width="200"/>
@@ -63,11 +107,12 @@ int totalPage = (int) request.getAttribute("totalPage");
 		%>
 	</table>
 	<style type="text/css">
-	.page>a.red{
-	color:red;
+	.page>a.white{
+	color:white;
 	}	
 	</style>
-		<div class="page">
+	<div class="articlePage">
+	<div class="page">
 		<%
 		if (cPage > 1) {
 		%>
@@ -98,6 +143,11 @@ int totalPage = (int) request.getAttribute("totalPage");
 		<%
 		}
 		%>
+	<div>
+		<a href="write" class="articleWrite">글쓰기</a>
+	</div>
+		</div>
+		
 	
 </body>
 </html>
